@@ -18,6 +18,6 @@
 	</div> <!-- /well -->
 
 <div class="span9 reports">
-	<h1>Number of visitors on days in current month</h1>
+	<h1>Number of distinct visitors/days in current month</h1>
 	<p><img src="<%=$pages%>" ></p>
 </div>

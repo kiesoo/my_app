@@ -8,11 +8,6 @@ use Email::Valid;
 use Digest::MD5 qw(md5_hex);
 use MIME::Lite;
 
-require Exporter;
-
-our @ISA = qw(Exporter);
-our @EXPORT =  qw( check );
-
 sub home {
 	my $self = shift;
 

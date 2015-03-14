@@ -1,7 +1,6 @@
 package MojoFull::Pages;
 
 use Mojo::Base 'Mojolicious::Controller';
-use MojoFull::Users qw( check );
 use DateTime;
 
 use URI::GoogleChart;
@@ -11,80 +10,78 @@ use Date::Manip;
 use Cwd;
 
 sub index {
-	my $self = shift;
-	
-	MojoFull::Users->check(); #TO DO check if user is logged in
-warn "dupa check";
-	my $dt = DateTime->now;
-	
-	my $month = $dt->month < 10 ? '0' . $dt->month : $dt->month;
-	my $days_in_month =  Date_DaysInMonth( $dt->month, $dt->year );
+    my $self = shift;
 
-	my $end_date = $dt->year . '-' . $dt->month . '-' . $days_in_month; 
-warn $end_date . " end date";
-	my $data = $self->db->resultset('PageIp')->search(
-				 {
-					"DATEPART(mm, data)" =>  $month 
-				},
-				
-				{
-					select   => [ 'data', { count => 'id_ip' } ],
-					as       => [qw/ data id_ip /],
-					group_by => [qw/ data /] 
-				}
-		);
+    my $dt = DateTime->now;
 
-	use Data::Dumper;
-#print Dumper($data) . " data pages index";
-	my @all_day = ();
+    my $month = $dt->month < 10 ? '0' . $dt->month : $dt->month;
 
-	$all_day[$_] = 0 foreach (1..$days_in_month);
+    my $days_in_month = Date_DaysInMonth( $dt->month, $dt->year );
 
-	while (my $user = $data->next()) {
-		my $m = '';
-		if ($user->data =~ /\d{4}-\d{2}-(\d{2})/){
-			$m = $1 ;
-			$all_day[$m] = $user->get_column('id_ip');
-		}
-		
-	}
+    my $end_date = $dt->year . '-' . $dt->month . '-' . $days_in_month;
 
-	my $x = "0:";
-	$x .= "|$_" foreach (1..$days_in_month);
+    my $data = $self->db->resultset( 'PageIp' )->search(
+                {
+                    "DATEPART( mm, data )" => $month
+                },
+                {
+                    select   => [ 'data', { count => 'id_ip' } ],
+                    as       => [qw/ day ip_count /],
+                    group_by => [qw/ data /]
+                }
+        );
 
-	shift @all_day;
-	#warn Dumper( @all_day) . " all day all night";
-	my $chart = URI::GoogleChart->new("lines", 850, 320,
-    
-		data => \@all_day,
-		range_show => "left",
-		range_round => 1,
-	
-		margin => 5,
-		color => ["blue"],
-		label => ["Number of visitors on days in the current month"],
-		chxl => $x,
-		chxt => "x", 
-	
-		chyl => [1..20],
-		chyt => "y",
-	);
+    my @all_days = ();
 
-	my $cwd = getcwd();
-	$cwd =~ s/\\/\//g;
+    #initialize array with 0
+    $all_days[$_] = 0 foreach ( 1 .. $days_in_month );
 
-	# save chart to a file
-		# save chart to a file
-	my $users_chart = "/images/reports/users1.png";
-	getstore($chart, "$cwd/public$users_chart");
-	
-	$self->render(
-		'pages/index',
-		pages => $users_chart,
-		reports => 'active',
-		users => 'none',
-		home => 'none'
-	);
+    while ( my $user = $data->next() ) {
+        my $day;
+
+        if ($user->get_column( 'day' ) =~ /\d{4}-\d{2}-(\d{2})/){
+            $day = $1 ;
+            $all_days[$day] = $user->get_column('ip_count');
+        }
+
+    }
+
+    my $x = "0:";
+    $x .= "|$_" foreach (1 .. $days_in_month);
+
+    #remove first element which is undef
+    shift @all_days;
+
+    my $chart = URI::GoogleChart->new("lines", 850, 320,
+
+        data => \@all_days,
+        range_show => "left",
+        range_round => 1,
+
+        margin => 5,
+        color => ["blue"],
+        label => ["Number of visitors on days in the current month"],
+        chxl => $x,
+        chxt => "x",
+
+        chyl => [1..20],
+        chyt => "y",
+    );
+
+    my $cwd = getcwd();
+    $cwd =~ s/\\/\//g;
+
+    # save chart to a file
+    my $users_chart = "/images/reports/users1.png";
+    getstore($chart, "$cwd/public$users_chart");
+
+    $self->render(
+        'pages/index',
+        pages => $users_chart,
+        reports => 'active',
+        users => 'none',
+        home => 'none'
+    );
 }
 
 
