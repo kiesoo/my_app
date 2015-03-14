@@ -1,0 +1,4 @@
+<div class="span9 reports">
+	<h1>Daily report</h1>
+	<p><img id="repday" src="<%=$pages%>" ></p>
+</div>

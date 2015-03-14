@@ -1,0 +1,39 @@
+% layout 'default';
+% title 'Reports - General raports';
+
+<script type="text/javascript">
+function trail( id ){
+	$('#trail').html('loading ...');
+	$.post('/ips/trail', {id : id}, function(response){
+		$('#trail').html(response);
+	});
+}
+</script>
+
+<div class="span3"  id ="menu_left">
+	<div class="well" style="padding: 8px 0;">
+		<ul class="nav nav-list">
+			<li class="nav-header">Standard Reports</li>
+			<li><a href="/pages">Users on website</a></li>
+			<li><a href="/pages/page">Users on pages</a></li>
+			<li><a href="/browsers/browser">Browsers</a></li>
+			<li><a href="/browsers/os">Operating Systems</a></li>
+			<li class="nav-header">Custom Reports</li>
+			<li class="active"><a href="/ips/users">User trail</a></li>
+			<li><a href="/pages/a_month">Month report</a></li>
+			<li><a href="/pages/a_day">Daily report</a></li>
+		</ul>
+	</div>
+</div>
+
+<div class="span9 reports">
+	<br />
+	<select id="ips" class="ips" onchange="trail(this.value)">
+		<option value="" >Please select an ip</option>
+		%foreach my $ip (keys %{$ips_option}){
+		<option value="<%=$ip%>" ><%=$ips_option->{$ip}->{'ip'}%></option>
+		%}
+	</select>
+</div>
+
+<div id="trail"></div>

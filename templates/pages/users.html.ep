@@ -1,0 +1,23 @@
+% layout 'admin';
+% title 'Web Analytics General Reports';
+
+	<div class="span3"  id ="menu_left">
+		<div class="well" style="padding: 8px 0;">
+			<ul class="nav nav-list">
+				<li class="nav-header">Standard Reports</li>
+				<li class="active"><a href="/pages">Users on website</a></li>
+				<li><a href="/pages/page">Users on pages</a></li>
+				<li><a href="/browsers/browser">Browsers</a></li>
+				<li><a href="/browsers/os">Operating Systems</a></li>
+				<li class="nav-header">Custom Reports</li>
+				<li><a href="ips/users">User trail</a></li>
+				<li><a href="#">Month report</a></li>
+				<li><a href="#">Daily report</a></li>
+			</ul>
+		</div> <!-- /well -->
+	</div> <!-- /well -->
+
+<div class="span9 reports">
+	<h1>Number of visitors on days in current month</h1>
+	<p><img src="<%=$pages%>" ></p>
+</div>

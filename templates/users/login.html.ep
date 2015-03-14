@@ -1,0 +1,29 @@
+% layout 'default';
+% title 'Web Analytics Login';
+
+<div id="users">
+   
+    <form action="login" method="POST" class="form-horizontal">
+    <table align="center">
+        %if ($error){
+        <tr>
+            <td colspan="2" align="center"><%=$error%></td>
+        </tr>
+        %}
+		<tr>
+            <td colspan="2" align="center"><h2>Login</h2></td>
+        </tr>
+        <tr>
+            <td>Email : </td>
+            <td><input type="text" name="email" class="span3"/></td>
+        </tr>
+        <tr>
+            <td>Password : </td>
+            <td><input type="password" name="password" class="span3"/></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><input type="submit" value="Login" name="login" class="btn btn-primary"/></td>
+        </tr>
+    </table>
+    </form>
+</div>

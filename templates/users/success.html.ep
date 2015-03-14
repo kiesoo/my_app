@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+      <link href="/favicon.ico" type="image/x-icon" rel="icon" />
+      <title><%= title %>Web Analytics Succes Registration</title>
+      <link type="text/css" rel="stylesheet" href="/css/bootstrap.css" media="all" />
+      <link type="text/css" rel="stylesheet" href="/css/lavish.css" media="all" />
+      <link type="text/css" rel="stylesheet" href="/css/default.css" media="all" />
+      <script type="text/javascript" src="/js/jquery-1.5.2.js"></script>
+      <script type="text/javascript" src="/js/yp.js"></script>
+      
+      <!--datepicker-->
+      <link type="text/css" rel="stylesheet" href="/css/ui/jquery.ui.all.css" media="all" />
+      <script type="text/javascript" src="/js/ui/jquery.ui.core.js"></script>
+      <script type="text/javascript" src="/js/ui/jquery.ui.datepicker.js"></script>
+      <!--END datepicker-->
+      
+      <script>
+          $(function() {
+              $(".datepicker").datepicker({ dateFormat: 'yy-mm-dd' });
+          });
+      </script>
+  </head>
+  <body>
+	<div class="container" id="body">
+     <div id="header">
+          
+        <div id="menu" class="span6">  
+			<a href="/users/home"><b><h1>Web Analytics</h1></b></a>
+			<ul class="nav nav-pills">
+				<li class="active"><a href="/users/home">Home</a></li>
+				<li><a href="/pages">Reports</a></li>
+				%if(session('User_type') eq 'admin'){
+				  <li><a href="/users/all">Users</a></li>
+				%}
+			</ul>
+		</div>  
+          
+		<div id="user" class="span5">
+			<ul class="nav nav-pills" id="login">
+			<li class="active"></li>
+		  % if(session('User_id')){
+			  <li><a href="#">Hi <%=session('User_last_name').' '.session('User_first_name')%></a>/li>
+			  <li><a href="/logout">Logout</a>/li>
+		  %} else {
+				<li><a href="/login">Login</a></li>
+				<li><a href="/register">Register user</a></li>
+			
+		  %}
+		  </ul>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+     
+		<div id="content">
+			<div id="users">
+				<p>Your account has been created. An email with activation link was sent to your email. Please activate your account.</p>
+				<a href="/login">Go to login page</a>
+			</div>
+		</div>
+    </div>  
+      <div id="footer"></div>
+  </body>
+</html>

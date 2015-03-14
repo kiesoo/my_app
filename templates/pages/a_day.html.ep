@@ -1,0 +1,47 @@
+% layout 'default';
+% title 'Reports - General raports';
+<script>
+$(function() {
+	$( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+});
+
+function data( id ){
+
+	$.ajax({
+		type : "post",
+		url : "/pages/day",
+		data : "id=" + id,
+		success : function(result){
+			$("#day").html(result);
+			
+			var img=$('#repday');
+			var src=img.attr('src');
+			var i=src.indexOf('?dummy=');
+			src=i!=-1?src.substring(0,i):src;
+
+			d = new Date();
+			img.attr('src', src+'?dummy='+d.getTime() );
+		}
+	});
+}
+</script>
+
+<div class="span3"  id ="menu_left">
+	<div class="well" style="padding: 8px 0;">
+		<ul class="nav nav-list">
+			<li class="nav-header">Standard Reports</li>
+			<li><a href="/pages">Users on website</a></li>
+			<li><a href="/pages/page">Users on pages</a></li>
+			<li><a href="/browsers/browser">Browsers</a></li>
+			<li><a href="/browsers/os">Operating Systems</a></li>
+			<li class="nav-header">Custom Reports</li>
+			<li><a href="/ips/users">User trail</a></li>
+			<li><a href="/pages/a_month">Month report</a></li>
+			<li class="active"><a href="/pages/a_day">Daily report</a></li>
+		</ul>
+	</div>
+</div>
+<div class="span9 reports">
+<p style="margin-top:15px;">Choose a day: <input type="date" id="datepicker" onchange="data(this.value)"></p>
+</div>
+<div id="day"></div>

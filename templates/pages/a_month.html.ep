@@ -1,0 +1,59 @@
+% layout 'admin';
+% title 'Reports - General raports';
+
+<script>
+	function data( id ){
+		$('#month').html('loading ...');
+
+		$.ajax({
+			type : "post",
+			url : "/pages/month",
+			data : "id=" + id,
+			success : function(result){
+				$("#month").html(result);
+				
+				var img=$('#repmonth');
+				var src=img.attr('src');
+				var i=src.indexOf('?dummy=');
+				src=i!=-1?src.substring(0,i):src;
+
+				d = new Date();
+				img.attr('src', src+'?dummy='+d.getTime() );
+			}
+		});
+	}
+</script>
+
+<div class="span3"  id ="menu_left">
+	<div class="well" style="padding: 8px 0;">
+		<ul class="nav nav-list">
+			<li class="nav-header">Standard Reports</li>
+			<li><a href="/pages">Users on website</a></li>
+			<li><a href="/pages/page">Users on pages</a></li>
+			<li><a href="/browsers/browser">Browsers</a></li>
+			<li><a href="/browsers/os">Operating Systems</a></li>
+			<li class="nav-header">Custom Reports</li>
+			<li><a href="/ips/users">User trail</a></li>
+			<li class="active"><a href="/pages/a_month">Monthly report</a></li>
+			<li><a href="/pages/a_day">Daily report</a></li>
+		</ul>
+	</div>
+</div>
+
+<select class="ips" onchange="data(this.value)" style="margin:15px">
+	<option value="" >Choose a month</option>
+	<option value="01" >January</option>
+	<option value="02" >February</option>
+	<option value="03" >March</option>
+	<option value="04" >April</option>
+	<option value="05" >May</option>
+	<option value="06" >June</option>
+	<option value="07" >July</option>
+	<option value="08" >August</option>
+	<option value="09" >September</option>
+	<option value="10" >October</option>
+	<option value="11" >November</option>
+	<option value="12" >December</option>
+</select>
+
+<div id="month"></div>

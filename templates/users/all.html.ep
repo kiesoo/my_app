@@ -1,0 +1,34 @@
+% layout 'default';
+% title 'Web Analytics Users';
+
+<div id="users">
+    <div id="all">
+        <table class="table table-striped" id="users">
+            <thead>
+            <tr>
+                <th>Email</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Genre</th>
+                <th>Type</th>
+                <th>Active</th>
+                <th width="50px">Action</th>
+            </tr>
+            </thead>
+            
+            <tbody>
+            %foreach my $user (@{$all_users}){
+            <tr>
+                <td><%=$user->email%></td>
+                <td><%=$user->first_name%></td>
+                <td><%=$user->last_name%></td>
+                <td><%=$user->genre%></td>
+                <td><%=$user->type%></td>
+                <td><%='yes' if $user->active;%><%='no' if !$user->active%></td>
+                <td><a href="/users/delete?id=<%=$user->id%>" onclick="return confirm('Are you sure you want to delete the user with the following user id: <%=$user->id%> ?');"><img src="/images/icons/delete.png" border="0" title="Delete user"/></a></td>
+            </tr>
+            %}
+            </tbody>
+        </table>
+    </div>
+</div>

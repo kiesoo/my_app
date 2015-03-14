@@ -1,0 +1,23 @@
+% layout 'default';
+% title 'Reports - General raports';
+
+	<div class="span3"  id ="menu_left">
+		<div class="well" style="padding: 8px 0;">
+			<ul class="nav nav-list">
+				<li class="nav-header">Standard Reports</li>
+				<li><a href="/pages">Users on website</a></li>
+				<li><a href="/pages/page">Users on pages</a></li>
+				<li class="active"><a href="/browsers/browser">Browsers</a></li>
+				<li><a href="/browsers/os">Operating Systems</a></li>
+				<li class="nav-header">Custom Reports</li>
+				<li><a href="/ips/users">User trail</a></li>
+				<li><a href="/pages/a_month">Month report</a></li>
+				<li><a href="/pages/a_day">Daily report</a></li>
+			</ul>
+		</div> <!-- /well -->
+	</div> <!-- /well -->
+
+<div class="span9 reports">
+	<h1>Views by browsers</h1>
+	<p><img src="<%=$browser_chart%>" ></p>
+</div>

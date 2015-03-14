@@ -1,0 +1,79 @@
+% layout 'admin';
+% title 'Web Analytics Home';
+
+<div class="span12" style="margin:15px;">
+	<h1>Why use Web Analytics? </h1>
+	<br />
+	<p>	Because it helps improving a website's performance by creating business intelligence not geeky techno-data. </p>
+	<p>	This insight into the visitors behavior allows discovering weak spots where visitors may be dropping out so that changes can be done to the website that in the end will lead to more business.
+	There is more online competition due to the fact that in online business models the costs are lower. This is the reason why more attention has to be given to how the users behave on the website.</p>
+	<p>	The websites that perform the best are not those that come up with one great idea (as these are easily copied) but those that can identify and understand visitor behaviour and then make changes that will provide an overall competitive advantage.</p>
+</div>
+
+
+<div class="span12">
+	<h2>Standard Reports</h2>
+	<ul class="thumbnails">
+		<li class="span3">
+			<div class="thumbnail">
+				<img src="/images/home/on_website.png" class="home">
+				<div class="caption">
+					<a href="/pages"><h5>Users on website</h5></a>
+				</div>
+			</div>
+		</li>
+		<li class="span3">
+			<div class="thumbnail">
+				<img src="/images/home/on_page.png" class="home">
+				<div class="caption">
+					<a href="/pages/page"><h5>Users on page</h5></a>
+				</div>
+			</div>
+		</li>
+		<li class="span3">
+			<div class="thumbnail">
+					<img src="/images/home/browsers.png" class="home">
+				<div class="caption">
+					<a href="/browsers/browser"><h5>Browsers</h5></a>
+				</div>
+			</div>
+		</li>
+		<li class="span3">
+			<div class="thumbnail">
+				<img src="/images/home/os.png" class="home">
+				<div class="caption">
+					<a href="/browsers/os"><h5>Operating Systems</h5></a>
+				</div>
+			</div>
+		</li>
+	</ul>
+</div>
+<div class="span12">
+	<h2>Custom reports</h2>
+	<ul class="thumbnails">
+		<li class="span3">
+			<div class="thumbnail">
+				<img src="/images/home/user_trail.png" class="home">
+				<div class="caption">
+					<a href="/ips/users"><h5>User trail</h5></a>
+				</div>
+			</div>
+		</li>
+		<li class="span3">
+			<div class="thumbnail">
+				<img src="/images/home/on_website.png" class="home">
+				<div class="caption">
+					<a href="/pages/a_month"><h5>Monthly report</h5></a>
+				</div>
+			</div>
+		</li>
+		<li class="span3">
+			<div class="thumbnail">
+					<img src="/images/home/on_day.png" class="home">
+				<div class="caption">
+					<a href="/pages/a_day"><h5>Daily report</h5></a>
+				</div>
+			</div>
+		</li>
+	</ul>
+</div>
