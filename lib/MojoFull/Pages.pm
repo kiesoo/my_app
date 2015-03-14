@@ -185,7 +185,7 @@ sub day{
 
 	my $day =$self->param('id');
 
-	my $data = $self->db->resultset('Page')->search(
+	my $data = $self->db->resultset( 'Page' )->search(
 				{   data => $day},
 				{
 					select   => [ { count => 'id' }, 'page' ],
@@ -199,11 +199,11 @@ sub day{
 	
 	
 	while (my $page = $data->next) {
-		push @pages, $page->page."(".$page->id.")";
+		push @pages, $page->page . "(" . $page->id . ")";
 		push @numbers, $page->id;
 	}
 	
-	my $chart = URI::GoogleChart->new("vertical-stacked-bars", 850, 320,
+	my $chart = URI::GoogleChart->new( "vertical-stacked-bars", 850, 320,
 		data => \@numbers,
 		range_show => "bootom",
 		background => "transparent",
@@ -231,10 +231,10 @@ sub page {
 
     my $dt = DateTime->now;
 
-    my $month = $dt->month < 10 ? '0'.$dt->month : $dt->month;
+    my $month = $dt->month < 10 ? '0' . $dt->month : $dt->month;
     my $year = $dt->year;
 
-    my $page_counts = $self->db->resultset('PageIp')->search(
+    my $page_counts = $self->db->resultset( 'PageIp' )->search(
                 {
                     "DATEPART(mm, data)" =>  $month,
                     "DATEPART(yy, data)" =>  $year,
@@ -252,13 +252,13 @@ sub page {
 
     while ( my $page = $page_counts->next ) {
 
-        $values[$i] = $page->get_column('page_count');
+        $values[$i] = $page->get_column( 'page_count' );
 
-        my $count = $page->get_column('page_count');
+        my $count = $page->get_column( 'page_count' );
 
-        my $page_url = $self->db->resultset('Page')->search(
+        my $page_url = $self->db->resultset( 'Page' )->search(
                 {
-                    id =>  $page->get_column('page_id'),
+                    id =>  $page->get_column( 'page_id' ),
                 },
                 {
                     columns   => [ 'page' ],
@@ -272,7 +272,7 @@ sub page {
     my $x = "0:";
     $x .= "|$_" foreach ( @pages );
 
-    my $chart = URI::GoogleChart->new("pie", 850, 320,
+    my $chart = URI::GoogleChart->new( "pie", 850, 320,
         data => \@values,
         range_show => "left",
         range_round => 1,

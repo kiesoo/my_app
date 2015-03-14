@@ -18,6 +18,6 @@
 	</div> <!-- /well -->
 
 <div class="span9 reports">
-	<h1>Views by operating systems</h1>
+	<h1>Views by operating systems in the current month</h1>
 	<p><img src="<%=$os_chart%>" ></p>
 </div>
