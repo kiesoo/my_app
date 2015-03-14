@@ -1,12 +1,12 @@
 % layout 'admin';
-% title 'Web Analytics General Reports';
+% title 'Web Analytics Standard Reports';
 
-	<div class="span3"  id ="menu_left">
+	<div class="span3" id ="menu_left">
 		<div class="well" style="padding: 8px 0;">
 			<ul class="nav nav-list">
 				<li class="nav-header">Standard Reports</li>
 				<li class="active"><a href="/pages">Users on website</a></li>
-				<li><a href="/pages/page">Users on pages</a></li>
+				<li><a href="/pages/page">Visits/page</a></li>
 				<li><a href="/browsers/browser">Browsers</a></li>
 				<li><a href="/browsers/os">Operating Systems</a></li>
 				<li class="nav-header">Custom Reports</li>

@@ -227,85 +227,78 @@ sub day{
 	);
 }
 sub page {
-	my $self = shift;
-	
-	my $dt = DateTime->now;
+    my $self = shift;
 
-	#my $start_date = $dt->year.'-'.($dt->month < 10 ? '0'.$dt->month : $dt->month); 
-	#my $end_date = $dt->year.'-'.$dt->month.'-'.'31'; 
-	my $month = $dt->month < 10 ? '0'.$dt->month : $dt->month;
-	my $year = $dt->year;
+    my $dt = DateTime->now;
 
-	my $page_counts = $self->db->resultset('PageIp')->search(
-				{
-					"DATEPART(mm, data)" =>  $month,
-					"DATEPART(yy, data)" =>  $year,
-				},
-				{
-					select   => [ 'id_pg', { count => 'data' } ],
-					as       => [qw/ page_id page_count/],
-					group_by => [qw/ id_pg /]
-				}
-		);
-	
+    my $month = $dt->month < 10 ? '0'.$dt->month : $dt->month;
+    my $year = $dt->year;
 
-	my @pages = ();
-	my @values = ();
-	my $i = 0;
-	
-	while ( my $page = $page_counts->next ) {
+    my $page_counts = $self->db->resultset('PageIp')->search(
+                {
+                    "DATEPART(mm, data)" =>  $month,
+                    "DATEPART(yy, data)" =>  $year,
+                },
+                {
+                    select   => [ 'id_pg', { count => 'data' } ],
+                    as       => [qw/ page_id page_count/],
+                    group_by => [qw/ id_pg /]
+                }
+        );
 
-		$values[$i] = $page->get_column('page_count');
-		my $x = $page->get_column('page_count');
+    my @pages = ();
+    my @values = ();
+    my $i = 0;
 
-		my $page_url = $self->db->resultset('Page')->search(
-				{
-					id =>  $page->get_column('page_id'),
-				},
-				{
-					columns   => [ 'page' ],
-				}
-		)->first()->page;
+    while ( my $page = $page_counts->next ) {
 
-		my $p = $page_url;
-		$pages[$i] = $p."($x)";	
-		$i++;
-	}
-	
-	my $x = "0:";
-	$x .= "|$_" foreach (@pages);
-	warn scalar @pages . " scalar de pages";
-	warn scalar @values . " scalar de values";
-	my $chart = URI::GoogleChart->new("pie", 850, 320,
-    
-	data => \@values,
-    range_show => "left",
-    range_round => 1,
-	
-	margin => 5,
-    color => ["blue"],
-    label => \@pages,
-    chxl => $x,
-    chxt => "x", 
-	chco=> "FFC6A5|FFFF42|DEF3BD|00A5C6|DEBDDE|FF0200|00FF0C|0300FF|C6EFF7|FFDEA5|FFAE42|DE23BD|0fA5C6"
-	);
+        $values[$i] = $page->get_column('page_count');
 
-	my $cwd = getcwd();
-	$cwd =~ s/\\/\//g;
+        my $count = $page->get_column('page_count');
 
-	# save chart to a file
-	my $pages_chart = "/images/reports/pages1.png";
-	warn Dumper($chart). "chart";
-	use Data::Dumper;
-	getstore($chart, "$cwd/public$pages_chart");
+        my $page_url = $self->db->resultset('Page')->search(
+                {
+                    id =>  $page->get_column('page_id'),
+                },
+                {
+                    columns   => [ 'page' ],
+                }
+        )->first()->page;
 
-	$self->render(
-		'/pages/page',
-		pages_chart => $pages_chart,
-		reports => 'active',
-		users => 'none',
-		home => 'none'
-	);
+        $pages[$i] = $page_url . "($count)";
+        $i++;
+    }
+
+    my $x = "0:";
+    $x .= "|$_" foreach ( @pages );
+
+    my $chart = URI::GoogleChart->new("pie", 850, 320,
+        data => \@values,
+        range_show => "left",
+        range_round => 1,
+
+        margin => 2,
+        color => ["blue"],
+        label => \@pages,
+        chxl => $x,
+        chxt => "x",
+        chco=> "FFC6A5|FFFF42|DEF3BD|00A5C6|DEBDDE|FF0200|00FF0C|0300FF|C6EFF7|FFDEA5|FFAE42|DE23BD|0fA5C6"
+    );
+
+    my $cwd = getcwd();
+    $cwd =~ s/\\/\//g;
+
+    # save chart to a file
+    my $pages_chart = "/images/reports/pages1.png";
+    getstore($chart, "$cwd/public$pages_chart");
+
+    $self->render(
+        '/pages/page',
+        pages_chart => $pages_chart,
+        reports => 'active',
+        users => 'none',
+        home => 'none'
+    );
 }
 
 1;
