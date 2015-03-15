@@ -5,12 +5,12 @@ $(function() {
 	$( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
 });
 
-function data( id ){
+function data( day ){
 
 	$.ajax({
 		type : "post",
 		url : "/pages/day",
-		data : "id=" + id,
+		data : "day=" + day,
 		success : function(result){
 			$("#day").html(result);
 			

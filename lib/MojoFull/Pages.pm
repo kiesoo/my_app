@@ -171,61 +171,83 @@ sub month{
 }
 
 sub a_day {
-	my $self = shift;
-	
-	$self->render(
-		'pages/a_day',
-		reports => 'active',
-		users => 'none',
-		home => 'none'
-	);
-}
-sub day{
     my $self = shift;
 
-	my $day =$self->param('id');
-
-	my $data = $self->db->resultset( 'Page' )->search(
-				{   data => $day},
-				{
-					select   => [ { count => 'id' }, 'page' ],
-					as       => [qw/ id page/],
-					group_by => [qw/ page /]
-				}
-		);
-		
-	my @pages = ();
-	my @numbers = ();
-	
-	
-	while (my $page = $data->next) {
-		push @pages, $page->page . "(" . $page->id . ")";
-		push @numbers, $page->id;
-	}
-	
-	my $chart = URI::GoogleChart->new( "vertical-stacked-bars", 850, 320,
-		data => \@numbers,
-		range_show => "bootom",
-		background => "transparent",
-		label => \@pages,
-		cht => "bvs",
-		chco=> "FFC6A5|FFFF42|DEF3BD|00A5C6|DEBDDE|FF0000|00FF00|0000FF,FFC6A5|DEF3BD|C6EFF7"
-	);
-
-	my $cwd = getcwd();
-	$cwd =~ s/\\/\//g;
-
-	# save chart to a file
-	my $day_chart = "/images/reports/day1.png";
-	getstore($chart, "$cwd/public$day_chart");
-	
-	$self->render(
-		pages => $day_chart,
-		reports => 'active',
-		users => 'none',
-		home => 'none'
-	);
+    $self->render(
+        'pages/a_day',
+        reports => 'active',
+        users => 'none',
+        home => 'none'
+    );
 }
+
+sub day {
+    my $self = shift;
+
+    my $day =$self->param('day');
+
+    my $page_counts = $self->db->resultset( 'PageIp' )->search(
+                {
+                    "CONVERT( date, data )" => $day,
+                },
+                {
+                    select   => [ { count => 'data' }, 'id_pg' ],
+                    as       => [ qw/ page_count page_id / ],
+                    group_by => [ qw/ id_pg / ]
+                }
+        );
+
+    my @pages = ();
+    my @values = ();
+    my $i = 0;
+
+    while ( my $page = $page_counts->next ) {
+        $values[$i] = $page->get_column( 'page_count' );
+
+        my $count = $page->get_column( 'page_count' );
+
+        my $page_url = $self->db->resultset( 'Page' )->find(
+                {
+                    id =>  $page->get_column( 'page_id' ),
+                },
+        )->page;
+
+        $pages[$i] = $page_url . "($count)";
+        $i++;
+    }
+
+    my $cwd = getcwd();
+    $cwd =~ s/\\/\//g;
+
+    my $data_count = ( scalar( @pages ) && scalar( @values ) ) ? 1: 0;
+
+    my $day_chart;
+    if ( $data_count ) {
+        my $chart = URI::GoogleChart->new( "vertical-stacked-bars", 850, 320,
+            data => \@values,
+            range_show => "bootom",
+            background => "transparent",
+            label => \@pages,
+            cht => "bvs",
+            chco=> "FFC6A5|FFFF42|DEF3BD|00A5C6|DEBDDE|FF0000|00FF00|0000FF,FFC6A5|DEF3BD|C6EFF7"
+        );
+
+        # save chart to a file
+        $day_chart = "/images/reports/day1.png";
+        getstore($chart, "$cwd/public$day_chart");
+    }
+    else {
+        $day_chart = "/images/errors/a_day_no_data.png";
+    }
+
+    $self->render(
+        pages => $day_chart,
+        reports => 'active',
+        users => 'none',
+        home => 'none'
+    );
+}
+
 sub page {
     my $self = shift;
 
