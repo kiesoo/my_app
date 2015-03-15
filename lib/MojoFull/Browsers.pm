@@ -71,7 +71,7 @@ sub browser {
     );
 }
 
-    sub os{
+sub os {
     my $self = shift;
 
     my $cwd = getcwd();
