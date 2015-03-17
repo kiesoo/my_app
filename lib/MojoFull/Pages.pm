@@ -251,6 +251,17 @@ sub day {
 sub page {
     my $self = shift;
 
+    $self->render(
+        '/pages/page',
+        reports => 'active',
+        users => 'none',
+        home => 'none'
+    );
+}
+
+sub page_data {
+    my $self = shift;
+
     my $dt = DateTime->now;
 
     my $month = $dt->month < 10 ? '0' . $dt->month : $dt->month;
@@ -268,13 +279,9 @@ sub page {
                 }
         );
 
-    my @pages = ();
-    my @values = ();
-    my $i = 0;
+    my @pages_data = ();
 
     while ( my $page = $page_counts->next ) {
-
-        $values[$i] = $page->get_column( 'page_count' );
 
         my $count = $page->get_column( 'page_count' );
 
@@ -287,40 +294,10 @@ sub page {
                 }
         )->first()->page;
 
-        $pages[$i] = $page_url . "($count)";
-        $i++;
+        push @pages_data, [ $page_url, $count ];
     }
 
-    my $x = "0:";
-    $x .= "|$_" foreach ( @pages );
-
-    my $chart = URI::GoogleChart->new( "pie", 850, 320,
-        data => \@values,
-        range_show => "left",
-        range_round => 1,
-
-        margin => 2,
-        color => ["blue"],
-        label => \@pages,
-        chxl => $x,
-        chxt => "x",
-        chco=> "FFC6A5|FFFF42|DEF3BD|00A5C6|DEBDDE|FF0200|00FF0C|0300FF|C6EFF7|FFDEA5|FFAE42|DE23BD|0fA5C6"
-    );
-
-    my $cwd = getcwd();
-    $cwd =~ s/\\/\//g;
-
-    # save chart to a file
-    my $pages_chart = "/images/reports/pages1.png";
-    getstore($chart, "$cwd/public$pages_chart");
-
-    $self->render(
-        '/pages/page',
-        pages_chart => $pages_chart,
-        reports => 'active',
-        users => 'none',
-        home => 'none'
-    );
+    $self->render( json => \@pages_data );
 }
 
 1;
