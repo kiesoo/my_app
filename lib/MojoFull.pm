@@ -31,6 +31,8 @@ sub startup {
     $auth_bridge->route('/pages/a_day')->to('pages#a_day');
     $auth_bridge->route('/pages/page')->to('pages#page');
     $auth_bridge->route('/pages/page_data')->to('pages#page_data');
+    $auth_bridge->route('/pages/pages_current_month_data')->to('pages#pages_current_month_data');
+
 
     $auth_bridge->route('/ips')->to('ips#users');
     $auth_bridge->route('/ips/users')->to('ips#users');

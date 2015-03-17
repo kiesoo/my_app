@@ -12,6 +12,17 @@ use Cwd;
 sub index {
     my $self = shift;
 
+    $self->render(
+        'pages/index',
+        reports => 'active',
+        users => 'none',
+        home => 'none'
+    );
+}
+
+sub pages_current_month_data {
+    my $self = shift;
+
     my $dt = DateTime->now;
 
     my $month = $dt->month < 10 ? '0' . $dt->month : $dt->month;
@@ -46,42 +57,14 @@ sub index {
 
     }
 
-    my $x = "0:";
-    $x .= "|$_" foreach (1 .. $days_in_month);
-
+    my @visits_in_current_month = ();
     #remove first element which is undef
-    shift @all_days;
+    while (my ( $day_index, $visits_per_day ) = each @all_days ) {
+        push @visits_in_current_month, [ "$day_index", $visits_per_day ];
+    }
+    shift(@visits_in_current_month);
 
-    my $chart = URI::GoogleChart->new("lines", 850, 320,
-
-        data => \@all_days,
-        range_show => "left",
-        range_round => 1,
-
-        margin => 5,
-        color => ["blue"],
-        label => ["Number of visitors on days in the current month"],
-        chxl => $x,
-        chxt => "x",
-
-        chyl => [1..20],
-        chyt => "y",
-    );
-
-    my $cwd = getcwd();
-    $cwd =~ s/\\/\//g;
-
-    # save chart to a file
-    my $users_chart = "/images/reports/users1.png";
-    getstore($chart, "$cwd/public$users_chart");
-
-    $self->render(
-        'pages/index',
-        pages => $users_chart,
-        reports => 'active',
-        users => 'none',
-        home => 'none'
-    );
+    $self->render( json => \@visits_in_current_month );
 }
 
 

@@ -19,5 +19,55 @@
 
 <div class="span9 reports">
 	<h1>Number of distinct visitors/days in current month</h1>
-	<p><img src="<%=$pages%>" ></p>
+	<div id="pages_v_chart_div"></div>
 </div>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    // Load the Visualization API and the piechart package.
+    google.load('visualization', '1.0', {'packages':['corechart']});
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.setOnLoadCallback(drawChart);
+    // Callback that creates and populates a data table,
+    // instantiates the pie chart, passes in the data and
+    // draws it.
+    function drawChart( ) {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Day');
+        data.addColumn('number', 'Count');
+
+        var jsonData = $.ajax({
+                        url: "/pages/pages_current_month_data",
+                        dataType:"json",
+                        async: false
+                    }).responseText;
+
+        row_data = $.parseJSON(jsonData);
+		console.log(row_data);
+        data.addRows(row_data);
+
+        // Set chart options
+        var options = {
+                'title'	: '',
+                'width'	: 980,
+                'height': 400,
+			    'hAxis': {
+					title: 'Days in current month',
+					textStyle : {fontSize: '10',},
+				},
+				'vAxis': {
+					title: 'Distinct ip count',
+					textStyle : {fontSize: '12',},
+				},
+				'chartArea': {  width: "90%", height: "80%" },
+				'pointSize' : 2,
+            };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.LineChart(document.getElementById('pages_v_chart_div'));
+        chart.draw(data, options);
+    }
+</script>
