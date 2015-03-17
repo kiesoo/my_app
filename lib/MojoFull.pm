@@ -37,6 +37,7 @@ sub startup {
 
     $auth_bridge->route('/browsers/browser')->to('browsers#browser');
     $auth_bridge->route('/browsers/os')->to('browsers#os');
+    $auth_bridge->route('/browsers/browser_data')->to('browsers#browser_data');
 
     $r->route('/register')->to('users#register');
     $r->route('/users/home')->to('users#home');

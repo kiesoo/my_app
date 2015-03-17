@@ -12,6 +12,18 @@ use Cwd;
 sub browser {
     my $self = shift;
 
+    $self->render(
+        'browsers/browser',
+        #browser_chart => $browser_chart,
+        reports => 'active',
+        users => 'none',
+        home => 'none'
+    );
+}
+
+sub browser_data {
+    my $self = shift;
+
     my $dt = DateTime->now;
 
     my $month = $dt->month < 10 ? '0' . $dt->month : $dt->month;
@@ -32,8 +44,7 @@ sub browser {
                         group_by => [ qw/ id_br / ]
                     });
 
-    my @browsers = ();
-    my @numbers = ();
+    my @browser_data = ();
 
     foreach my $browser ( @data ){
         my $browser_name = $self->db->resultset( 'Browser' )->search(
@@ -45,30 +56,10 @@ sub browser {
                 }
         )->first()->browser;
 
-        push @browsers, $browser_name. "(" . $browser->get_column( 'browser_count' ) . ")";
-        push @numbers, $browser->get_column( 'browser_count' );
+        push @browser_data, [ $browser_name, $browser->get_column( 'browser_count' ) ];
     }
 
-    my $chart = URI::GoogleChart->new( "pie-3d", 850, 320,
-        data => \@numbers,
-        range_show => "left",
-        range_round => 1,
-        background => "transparent",
-        label => \@browsers,
-        chco => "FFC6A5|FFFF42|DEF3BD|00A5C6|DEBDDE|FF0200|00FF0C|0300FF|C6EFF7|FFDEA5|FFAE42|DE23BD|0fA5C6"
-    );
-
-    # save chart to a file
-    my $browser_chart = "/images/reports/browsers.png";
-    getstore( $chart, "$cwd/public$browser_chart" );
-
-    $self->render(
-        'browsers/browser',
-        browser_chart => $browser_chart,
-        reports => 'active',
-        users => 'none',
-        home => 'none'
-    );
+    $self->render( json => \@browser_data );
 }
 
 sub os {
