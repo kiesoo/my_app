@@ -50,9 +50,7 @@ sub trail{
                     }
                 );
 
-    my @dates = ();
-    my @numbers = ();
-    my $x = "0:";
+    my @pages_data = ();
 
     foreach my $page ( @data ) {
         my $page_url = $self->db->resultset( 'Page' )->search(
@@ -64,35 +62,10 @@ sub trail{
                 }
         )->first()->page;
 
-        push @dates , $page_url;
-        push @numbers , $page->get_column( 'page_count' );
-
-        $x .= "|" . $page_url . " ";
+        push @pages_data, [ $page_url, $page->get_column( 'page_count' )];
     }
 
-    my $chart = URI::GoogleChart->new("vertical-grouped-bars", 600, 250,
-        data => [
-            { range => "a", v => \@numbers },
-        ],
-        range => {
-        a => { show => "left" },
-        },
-        label => \@dates,
-        chxt => "x",
-        chbh => "a",
-        chco=> "FFC6A5|FFFF42|DEF3BD|00A5C6|DEBDDE|FF0200|00FF0C|0300FF|C6EFF7|FFDEA5|FFAE42|DE23BD|0fA5C6"
-    );
-
-    # save chart to a file
-    my $ip_chart = "/images/reports/ip.png";
-    my $rc = getstore($chart, "$cwd/public$ip_chart");
-
-    $self->render(
-        ip_chart =>  $ip_chart,
-        home => 'none',
-        reports => 'active',
-        home => 'none'
-    );
+    $self->render( json => \@pages_data );
 }
 
 1;

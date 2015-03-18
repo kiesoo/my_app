@@ -59,17 +59,17 @@
         // Set chart options
         var options = {
                 title: '',
-                width: 1000,
-                height: 563,
+                width: 800,
+                height: 500,
                 hAxis: {
                             title: 'Views',
-                            minValue: 0
+                            minValue: 0,
                         },
                 vAxis: {
                             title: 'Operating Systems'
                         },
-                'chartArea': {  width: "80%", height: "80%" },
-                //legend: { position: "none" },
+                'chartArea': {  width: "60%", height: "80%" },
+                'legend' : { position: "none" },
             };
 
         // Instantiate and draw our chart, passing in some options.

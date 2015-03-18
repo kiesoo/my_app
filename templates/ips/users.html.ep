@@ -1,29 +1,5 @@
-% layout 'default';
-% title 'Reports - General raports';
-
-<script type="text/javascript">
-function trail( id ) {
-    $( '#trail' ).html( 'loading ...' );
-
-    $.ajax({
-        type : "post",
-        url	: "/ips/trail",
-        data : "id=" + id,
-        success : function( result ) {
-            $( "#trail" ).html( result );
-
-            var img = $('#usrtrail');
-            var src = img.attr('src');
-            var i = src.indexOf('?dummy=');
-
-            src = i!=-1 ? src.substring( 0 , i ) : src;
-
-            d = new Date();
-            img.attr('src', src + '?dummy=' + d.getTime() );
-        }
-    });
-    }
-</script>
+% layout 'admin';
+% title 'Reports - Standard reports';
 
 <div class="span3" id ="menu_left">
     <div class="well" style="padding: 8px 0;">
@@ -42,13 +18,67 @@ function trail( id ) {
 </div>
 
 <div class="span9 reports">
-    <br />
+    <h1 id="title">User trail</h1>
+
     <select id="ips" class="ips" onchange="trail(this.value)">
         <option value="" >Please select an ip</option>
 %       foreach my $ip ( keys %{ $ips_option } ) {
             <option value="<%=$ip %>" ><%=$ips_option->{$ip}->{'ip'}%></option>
 %       }
     </select>
+    <div id="trail"></div>
 </div>
 
-<div id="trail"></div>
+<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}" ></script>
+
+<script type="text/javascript">
+
+    function trail( id ) {
+        $( '#trail' ).html( 'Loading ...' );
+
+        google.load('visualization', '1', {packages: ['corechart']});
+        google.setOnLoadCallback(drawChart(id));
+
+        function drawChart( id ) {
+            var data = new google.visualization.DataTable();
+
+            data.addColumn('string', 'Page');
+            data.addColumn('number', 'Count');
+
+            var jsonData = $.ajax({
+                        url: "/ips/trail",
+                        dataType:"json",
+                        data : "id=" + id,
+                        async: false
+                    }).responseText;
+
+            var row_data = $.parseJSON(jsonData);
+            data.addRows(row_data);
+
+            // Set chart options
+            var options = {
+                    'title'	: '',
+                    'width'	: 900,
+                    'height': 500,
+                    'hAxis': {
+                        title: 'Page',
+                        textStyle : {fontSize: '10',},
+                        maxTextLines : 5,
+                        //slantedText : false,
+                        slantedTextAngle : 45,
+                        textPosition : 'out'
+                    },
+                    'vAxis': {
+                        title: 'Count',
+                        textStyle : {fontSize: '12',},
+                    },
+                    'chartArea': {  width: "80%", height: "70%" },
+                    legend: { position: "none" },
+                };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('trail'));
+            chart.draw(data, options);
+      };
+
+    }
+</script>

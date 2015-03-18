@@ -10,6 +10,9 @@ nav,
 section {
   display: block;
 }
+h1.hidden {
+    display: none;
+}
 audio,
 canvas,
 video {

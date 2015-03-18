@@ -1,1 +1,0 @@
-<div class="span9 reports">	<h1>User trail</h1>	<p><img id="usrtrail" src="<%=$ip_chart%>" ></p></div>
