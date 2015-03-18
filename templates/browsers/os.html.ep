@@ -1,23 +1,79 @@
 % layout 'default';
 % title 'Reports - General raports';
 
-	<div class="span3"  id ="menu_left">
-		<div class="well" style="padding: 8px 0;">
-			<ul class="nav nav-list">
-				<li class="nav-header">Standard Reports</li>
-				<li><a href="/pages">Users on website</a></li>
-				<li><a href="/pages/page">Visits/page</a></li>
-				<li><a href="/browsers/browser">Browsers</a></li>
-				<li class="active"><a href="/browsers/os">Operating Systems</a></li>
-				<li class="nav-header">Custom Reports</li>
-				<li><a href="/ips/users">User trail</a></li>
-				<li><a href="/pages/a_month">Monthly report</a></li>
-				<li><a href="/pages/a_day">Daily report</a></li>
-			</ul>
-		</div> <!-- /well -->
-	</div> <!-- /well -->
+    <div class="span3"  id ="menu_left">
+        <div class="well" style="padding: 8px 0;">
+            <ul class="nav nav-list">
+                <li class="nav-header">Standard Reports</li>
+                <li><a href="/pages">Users on website</a></li>
+                <li><a href="/pages/page">Visits/page</a></li>
+                <li><a href="/browsers/browser">Browsers</a></li>
+                <li class="active"><a href="/browsers/os">Operating Systems</a></li>
+                <li class="nav-header">Custom Reports</li>
+                <li><a href="/ips/users">User trail</a></li>
+                <li><a href="/pages/a_month">Monthly report</a></li>
+                <li><a href="/pages/a_day">Daily report</a></li>
+            </ul>
+        </div> <!-- /well -->
+    </div> <!-- /well -->
 
 <div class="span9 reports">
-	<h1>Views by operating systems in the current month</h1>
-	<p><img src="<%=$os_chart%>" ></p>
+    <h1>Views by operating systems in the current month</h1>
+    <div id="os_chart_div"></div>
 </div>
+
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    // Load the Visualization API and the piechart package.
+    google.load('visualization', '1.0', {'packages':['corechart']});
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.setOnLoadCallback(drawChart);
+    // Callback that creates and populates a data table,
+    // instantiates the pie chart, passes in the data and
+    // draws it.
+    function drawChart( ) {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Operating Systems');
+        data.addColumn('number', 'Views');
+
+        var jsonData = $.ajax({
+                        url: "/browsers/os_data",
+                        dataType:"json",
+                        async: false
+                    }).responseText;
+
+        row_data = $.parseJSON(jsonData);
+        data.addRows(row_data);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" }]);
+
+        // Set chart options
+        var options = {
+                title: '',
+                width: 1000,
+                height: 563,
+                hAxis: {
+                            title: 'Views',
+                            minValue: 0
+                        },
+                vAxis: {
+                            title: 'Operating Systems'
+                        },
+                'chartArea': {  width: "80%", height: "80%" },
+                //legend: { position: "none" },
+            };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.BarChart(document.getElementById('os_chart_div'));
+        chart.draw(view, options);
+    }
+</script>

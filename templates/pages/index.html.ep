@@ -46,7 +46,6 @@
                     }).responseText;
 
         row_data = $.parseJSON(jsonData);
-		console.log(row_data);
         data.addRows(row_data);
 
         // Set chart options

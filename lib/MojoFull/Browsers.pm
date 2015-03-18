@@ -65,6 +65,16 @@ sub browser_data {
 sub os {
     my $self = shift;
 
+    $self->render(
+        reports => 'active',
+        users => 'none',
+        home => 'none'
+    );
+}
+
+sub os_data {
+    my $self = shift;
+
     my $cwd = getcwd();
     $cwd =~ s/\\/\//g;
 
@@ -86,7 +96,7 @@ sub os {
                     }
                 );
 
-    my @os = ();
+    my @os_data = ();
     my @counts = ();
 
     foreach my $browser ( @data ) {
@@ -99,29 +109,10 @@ sub os {
                         }
                     )->first()->name;
 
-        push @os, $os_name . "(" . $browser->get_column( 'os_count' ) . ")";
-        push @counts, $browser->get_column( 'os_count' );
+        push @os_data, [ $os_name, $browser->get_column( 'os_count' ) ];
     }
 
-    my $chart = URI::GoogleChart->new( "horizontal-stacked-bars", 850, 320,
-        data => \@counts,
-        range_show => "bootom",
-        background => "transparent",
-        chdl => join ( '|', @os),
-        cht => "bhs",
-        chco=> "FFC6A5|FFFF42|DEF3BD|00A5C6|DEBDDE|FF0000|00FF00|0000FF,FFC6A5|DEF3BD|C6EFF7"
-    );
-
-    # save chart to a file
-    my $os_chart = "/images/reports/os.png";
-    getstore( $chart,  "$cwd/public$os_chart" );
-
-    $self->render(
-        os_chart => $os_chart,
-        reports => 'active',
-        users => 'none',
-        home => 'none'
-    );
+    $self->render( json => \@os_data );
 }
 
 
