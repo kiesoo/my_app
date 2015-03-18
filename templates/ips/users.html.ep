@@ -59,7 +59,7 @@
             var options = {
                     'title'	: '',
                     'width'	: 900,
-                    'height': 500,
+                    'height': 600,
                     'hAxis': {
                         title: 'Page',
                         textStyle : {fontSize: '10',},
@@ -72,7 +72,7 @@
                         title: 'Count',
                         textStyle : {fontSize: '12',},
                     },
-                    'chartArea': {  width: "80%", height: "70%" },
+                    'chartArea': {  width: "80%", height: "65%" },
                     legend: { position: "none" },
                 };
 

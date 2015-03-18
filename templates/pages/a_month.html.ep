@@ -1,28 +1,5 @@
 % layout 'admin';
-% title 'Reports - General raports';
-
-<script>
-	function data( id ){
-		$('#month').html('loading ...');
-
-		$.ajax({
-			type : "post",
-			url : "/pages/month",
-			data : "id=" + id,
-			success : function(result){
-				$("#month").html(result);
-				
-				var img=$('#repmonth');
-				var src=img.attr('src');
-				var i=src.indexOf('?dummy=');
-				src=i!=-1?src.substring(0,i):src;
-
-				d = new Date();
-				img.attr('src', src+'?dummy='+d.getTime() );
-			}
-		});
-	}
-</script>
+% title 'Reports - Standard reports';
 
 <div class="span3"  id ="menu_left">
 	<div class="well" style="padding: 8px 0;">
@@ -39,21 +16,73 @@
 		</ul>
 	</div>
 </div>
+<div class="span9 reports">
+	<h1  id="current_month_title">Visitors number/days in the selected month</h1>
+	<select class="ips" onchange="create_chart(this.value)" style="margin:15px">
+		<option value="" >Choose a month</option>
+		<option value="01">January</option>
+		<option value="02">February</option>
+		<option value="03">March</option>
+		<option value="04">April</option>
+		<option value="05">May</option>
+		<option value="06">June</option>
+		<option value="07">July</option>
+		<option value="08">August</option>
+		<option value="09">September</option>
+		<option value="10">October</option>
+		<option value="11">November</option>
+		<option value="12">December</option>
+	</select>
+	<div id="sel_month"></div>
+</div>
 
-<select class="ips" onchange="data(this.value)" style="margin:15px">
-	<option value="" >Choose a month</option>
-	<option value="01" >January</option>
-	<option value="02" >February</option>
-	<option value="03" >March</option>
-	<option value="04" >April</option>
-	<option value="05" >May</option>
-	<option value="06" >June</option>
-	<option value="07" >July</option>
-	<option value="08" >August</option>
-	<option value="09" >September</option>
-	<option value="10" >October</option>
-	<option value="11" >November</option>
-	<option value="12" >December</option>
-</select>
 
-<div id="month"></div>
+<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}" ></script>
+
+<script type="text/javascript">
+
+    function create_chart( id ) {
+        $( '#sel_month' ).html( 'Loading ...' );
+
+        google.load('visualization', '1', {packages: ['corechart']});
+        google.setOnLoadCallback(drawChart(id));
+
+        function drawChart( id ) {
+            var data = new google.visualization.DataTable();
+
+            data.addColumn('string', 'Days');
+            data.addColumn('number', 'Count');
+
+            var jsonData = $.ajax({
+                        url: "/pages/month",
+                        dataType:"json",
+                        data : "id=" + id,
+                        async: false
+                    }).responseText;
+
+            var row_data = $.parseJSON(jsonData);
+            data.addRows(row_data);
+
+            // Set chart options
+			var options = {
+                'title'	: '',
+                'width'	: 980,
+                'height': 400,
+			    'hAxis': {
+					title: 'Days in selected month',
+					textStyle : {fontSize: '10',},
+				},
+				'vAxis': {
+					title: 'Distinct ip count',
+					textStyle : {fontSize: '12',},
+				},
+				'chartArea': {  width: "90%", height: "80%" },
+				'pointSize' : 2,
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('sel_month'));
+            chart.draw(data, options);
+      };
+
+    }
+</script>

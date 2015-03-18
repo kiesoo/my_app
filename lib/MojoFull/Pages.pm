@@ -79,7 +79,7 @@ sub a_month {
     );
 }
 
-sub month{
+sub month {
     my $self = shift;
 
     my $month =$self->param('id');
@@ -99,58 +99,34 @@ sub month{
                 }
         );
 
-    my @all_day = ();
+    my @all_days = ();
 
     my $last_day_of_month = DateTime->last_day_of_month(
             year  => $year,
             month => $month,
         )->day;
 
-    $all_day[$_] = 0 foreach ( 1 .. $last_day_of_month );
+    $all_days[$_] = 0 foreach ( 1 .. $last_day_of_month );
 
     while ( my $user = $data->next ) {
         my $day = '';
 
         if ( $user->get_column( 'day' )  =~ /\d{4}-\d{2}-(\d{2})/ ) {
             $day = $1;
-            $all_day[$day] = $user->get_column('ip_count');
+            $all_days[$day] = $user->get_column('ip_count');
         }
     }
 
-    my $x = "0:";
-    $x .= "|$_" foreach (1..$last_day_of_month);
+    my @visits_in_chosen_month = ();
 
-    shift @all_day;
+    #remove first element which is undef
+    while (my ( $day_index, $visits_per_day ) = each @all_days ) {
+        push @visits_in_chosen_month, [ "$day_index", $visits_per_day ];
+    }
 
-    my $chart = URI::GoogleChart->new("lines", 850, 320,
+    shift( @visits_in_chosen_month );
 
-    data => \@all_day,
-    range_show => "left",
-    range_round => 1,
-
-    margin => 5,
-    color => ["blue"],
-    label => ["Number of visitors on days"],
-    chxl => $x,
-    chxt => "x", 
-
-    chyl => [1..10],
-    chyt => "y",
-    );
-
-    my $cwd = getcwd();
-    $cwd =~ s/\\/\//g;
-
-    # save chart to a file
-    my $users_chart = "/images/reports/months.png";
-    getstore($chart, "$cwd/public$users_chart");
-
-    $self->render(
-        pages => $users_chart,
-        reports => 'active',
-        users => 'none',
-        home => 'none'
-    );
+    $self->render( json => \@visits_in_chosen_month );
 }
 
 sub a_day {
