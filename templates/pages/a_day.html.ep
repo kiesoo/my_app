@@ -2,46 +2,82 @@
 % title 'Reports - General raports';
 <script>
 $(function() {
-	$( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    $( "#datepicker" ).datepicker( { dateFormat: 'yy-mm-dd' } );
 });
-
-function data( day ){
-
-	$.ajax({
-		type : "post",
-		url : "/pages/day",
-		data : "day=" + day,
-		success : function(result){
-			$("#day").html(result);
-			
-			var img=$('#repday');
-			var src=img.attr('src');
-			var i=src.indexOf('?dummy=');
-			src=i!=-1?src.substring(0,i):src;
-
-			d = new Date();
-			img.attr('src', src+'?dummy='+d.getTime() );
-		}
-	});
-}
 </script>
 
 <div class="span3"  id ="menu_left">
-	<div class="well" style="padding: 8px 0;">
-		<ul class="nav nav-list">
-			<li class="nav-header">Standard Reports</li>
-			<li><a href="/pages">Users on website</a></li>
-			<li><a href="/pages/page">Visits/page</a></li>
-			<li><a href="/browsers/browser">Browsers</a></li>
-			<li><a href="/browsers/os">Operating Systems</a></li>
-			<li class="nav-header">Custom Reports</li>
-			<li><a href="/ips/users">User trail</a></li>
-			<li><a href="/pages/a_month">Monthly report</a></li>
-			<li class="active"><a href="/pages/a_day">Daily report</a></li>
-		</ul>
-	</div>
+    <div class="well" style="padding: 8px 0;">
+        <ul class="nav nav-list">
+            <li class="nav-header">Standard Reports</li>
+            <li><a href="/pages">Users on website</a></li>
+            <li><a href="/pages/page">Visits/page</a></li>
+            <li><a href="/browsers/browser">Browsers</a></li>
+            <li><a href="/browsers/os">Operating Systems</a></li>
+            <li class="nav-header">Custom Reports</li>
+            <li><a href="/ips/users">User trail</a></li>
+            <li><a href="/pages/a_month">Monthly report</a></li>
+            <li class="active"><a href="/pages/a_day">Daily report</a></li>
+        </ul>
+    </div>
 </div>
+
 <div class="span9 reports">
-<p style="margin-top:15px;">Choose a day: <input type="date" id="datepicker" onchange="data(this.value)"></p>
+    <h1>Page visits for the selected day</h1>
+
+    <p style="margin-top:15px;">Choose a day: <input type="date" id="datepicker"  placeholder='yyyy/mm/dd' onchange="create_chart(this.value)"></p>
+    <div id="day"></div>
 </div>
-<div id="day"></div>
+
+<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}" ></script>
+
+<script type="text/javascript">
+
+    function create_chart( day ) {
+        $( '#trail' ).html( 'Loading ...' );
+
+        google.load('visualization', '1', {packages: ['corechart']});
+        google.setOnLoadCallback(drawChart(day));
+
+        function drawChart( day ) {
+            //var data = new google.visualization.DataTable();
+
+            var jsonData = $.ajax({
+                        url: "/pages/day",
+                        dataType:"json",
+                        data : "day=" + day,
+                        async: false
+                    }).responseText;
+
+            var row_data = $.parseJSON(jsonData);
+
+            var data = google.visualization.arrayToDataTable(
+                                                                row_data
+                                                             );
+
+            //data.addRows(row_data);
+
+            // Set chart options
+            var options = {
+                    'title'	: '',
+                    'width'	: 900,
+                    'height': 500,
+                    'hAxis': {
+                        title: 'Pages',
+                        textStyle : {fontSize: '5',},
+                        textPosition : 'out'
+                    },
+                    'vAxis': {
+                        gridlines: {count: 10 },
+                        title: 'Visits',
+                        textStyle : {fontSize: '12',},
+                    },
+                    'chartArea': {  width: "60%", height: "80%" },
+                };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('day'));
+            chart.draw(data, options);
+      };
+
+    }
+</script>
