@@ -58,20 +58,6 @@ sub register {
 
         $self->session( data => undef );
 
-        #warn "Activation link : http://localhost:3000/users/activate/".$inactive_user->user_id."/".$inactive_user->secret_key;
-
-        #send email
-        #my $msg = MIME::Lite->new(
-        #    From    => 'users@Wa.com',
-        #    To      => $self->session('User_email'),
-        #    Subject => 'Your activation link',
-        #    Type    => 'TEXT',
-        #    Data    => "Activation link : http://localhost:3000/users/activate/".$inactive_user->user_id."/".$inactive_user->secret_key
-        #);
-        #
-        #MIME::Lite->send('smtp', '127.0.0.1', Timeout => 10);
-        #$msg->send;
-
         $self->redirect_to('/register/success');   
     }
 
@@ -184,8 +170,6 @@ sub __login{
     $self->session( User_last_name => $user->last_name );
     $self->session( User_type => $user->type );
 
-    warn $user->email." logged in\n";
-
     #and return user type
     return $user->type;
 }
@@ -206,7 +190,12 @@ sub logout{
 
 sub check {
     my $self = shift;
-    
+
+	unless ($self->session( 'User_id' ) ) {
+		$self->redirect_to( '/login' ) ;
+		return 0;
+	}
+
     #retrieve user stored in session
     my $user = $self->db->resultset( 'User' )->find( $self->session( 'User_id' ) );
     my $type = $self->param( 'type' );
@@ -216,11 +205,11 @@ sub check {
         #type is required and user is that type
         if ( $type && $user->type eq $type ) {
             #return true value
-            1;   
+            return 1;
         }#type is not required
         elsif ( !$type ) {
             #return true value
-            1;
+            return 1;
         }
         elsif ( $type && $user->type ne $type ) {
             #redirect to login page
@@ -230,7 +219,7 @@ sub check {
     else {
         #redirect to login page
         $self->redirect_to( '/login' );
-        0;
+        return 0;
     }
 }
 

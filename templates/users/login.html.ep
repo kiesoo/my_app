@@ -11,7 +11,7 @@
         </tr>
         %}
 		<tr>
-            <td colspan="2" align="center"><h2>Login</h2></td>
+            <td colspan="2" align="center"><h2>Log in</h2></td>
         </tr>
         <tr>
             <td>Email : </td>
@@ -22,7 +22,7 @@
             <td><input type="password" name="password" class="span3"/></td>
         </tr>
         <tr>
-            <td colspan="2" align="center"><input type="submit" value="Login" name="login" class="btn btn-primary"/></td>
+            <td colspan="2" align="center"><input type="submit" value="Log in" name="login" class="btn btn-primary"/></td>
         </tr>
     </table>
     </form>

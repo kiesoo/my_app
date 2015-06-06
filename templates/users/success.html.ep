@@ -54,7 +54,7 @@
      
 		<div id="content">
 			<div id="users">
-				<p>Your account has been created. An email with activation link was sent to your email. Please activate your account.</p>
+				<p>Your account has been created.</p>
 				<a href="/login">Go to login page</a>
 			</div>
 		</div>

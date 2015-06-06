@@ -7,8 +7,6 @@ use URI::GoogleChart;
 use LWP::Simple qw(getstore);
 use Date::Manip;
 
-use Cwd;
-
 sub index {
     my $self = shift;
 

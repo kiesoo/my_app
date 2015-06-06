@@ -32,9 +32,9 @@
 		  % if(session('User_id')){
 			
 			  <li><a href="#">Hi <%=session('User_last_name').' '.session('User_first_name')%></a></li>
-			  <li><a href="/logout">Logout</a></li>
+			  <li><a href="/logout">Log out</a></li>
 		  %} else {
-				<li><a href="/login">Login</a></li>
+				<li><a href="/login">Log in</a></li>
 				<li><a href="/register">Register user</a></li>
 			
 		  %}

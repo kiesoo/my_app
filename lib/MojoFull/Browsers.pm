@@ -7,20 +7,18 @@ use DateTime;
 use URI::GoogleChart;
 use LWP::Simple qw(getstore);
 
-use Cwd;
-
 sub browser {
     my $self = shift;
 
     $self->render(
         'browsers/browser',
-        #browser_chart => $browser_chart,
         reports => 'active',
         users => 'none',
         home => 'none'
     );
 }
 
+#get browser data for the current month in the current year
 sub browser_data {
     my $self = shift;
 
@@ -29,10 +27,7 @@ sub browser_data {
     my $month = $dt->month < 10 ? '0' . $dt->month : $dt->month;
     my $year = $dt->year;
 
-    my $cwd = getcwd();
-    $cwd =~ s/\\/\//g;
-
-    #Browsers Chart
+    #Browsers Chart Data Select
     my @data = $self->db->resultset( 'BrowserIp' )->search (
                     {
                         "DATEPART(mm, data)" =>  $month,
@@ -74,9 +69,6 @@ sub os {
 
 sub os_data {
     my $self = shift;
-
-    my $cwd = getcwd();
-    $cwd =~ s/\\/\//g;
 
     my $dt = DateTime->now;
 

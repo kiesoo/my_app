@@ -60,7 +60,7 @@ $(function() {
             // Set chart options
             var options = {
                     'title'	: '',
-                    'width'	: 900,
+                    'width'	: 850,
                     'height': 500,
                     'hAxis': {
                         title: 'Pages',

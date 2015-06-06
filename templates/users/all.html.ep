@@ -1,4 +1,4 @@
-% layout 'default';
+% layout 'admin';
 % title 'Web Analytics Users';
 
 <div id="users">

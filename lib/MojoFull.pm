@@ -12,8 +12,6 @@ sub startup {
 
     $self->helper(db => sub { $self->app->schema });
 
-
-
     # Routes
     my $r = $self->routes;
     my $auth_bridge = $r->bridge('/')->to('users#check');
@@ -25,9 +23,9 @@ sub startup {
     $auth_bridge->route('/users/delete')->to('users#delete');
 
     $auth_bridge->route('/pages')->to('pages#index');
-    $auth_bridge->route('/pages/month')->to('pages#month');
+    $r->route('/pages/month')->to('pages#month');
     $auth_bridge->route('/pages/a_month')->to('pages#a_month');
-    $auth_bridge->route('/pages/day')->to('pages#day');
+    $r->route('/pages/day')->to('pages#day');
     $auth_bridge->route('/pages/a_day')->to('pages#a_day');
     $auth_bridge->route('/pages/page')->to('pages#page');
     $auth_bridge->route('/pages/page_data')->to('pages#page_data');
@@ -36,7 +34,7 @@ sub startup {
 
     $auth_bridge->route('/ips')->to('ips#users');
     $auth_bridge->route('/ips/users')->to('ips#users');
-    $auth_bridge->route('/ips/trail')->to('ips#trail');
+    $r->route('/ips/trail')->to('ips#trail');
 
     $auth_bridge->route('/browsers/browser')->to('browsers#browser');
     $auth_bridge->route('/browsers/os')->to('browsers#os');

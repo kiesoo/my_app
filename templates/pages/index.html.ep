@@ -51,7 +51,7 @@
         // Set chart options
         var options = {
                 'title'	: '',
-                'width'	: 980,
+                'width'	: 800,
                 'height': 400,
 			    'hAxis': {
 					title: 'Days in current month',

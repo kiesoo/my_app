@@ -7,8 +7,6 @@ use DateTime;
 use URI::GoogleChart;
 use LWP::Simple qw(getstore);
 
-use Cwd;
-
 sub users{
     my $self = shift;
 
@@ -33,9 +31,6 @@ sub users{
 
 sub trail{
     my ( $self ) = @_;
-
-    my $cwd = getcwd();
-    $cwd =~ s/\\/\//g;
 
     my $id = $self->param( 'id' );
 
